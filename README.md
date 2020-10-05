@@ -9,4 +9,4 @@ Andrea Antonini, Andrea Sattin, Monica Moroni, Serena Bovetti, Claudio Moretti, 
 2020, bioRxiv, doi: https://doi.org/10.1101/2020.05.14.095299
 
 Details:
-- required software: Matlab v. 2019b
+- required software: Matlab R2019b
