@@ -8,5 +8,7 @@ Extended field-of-view ultrathin microendoscopes for high-resolution two-photon 
 Andrea Antonini, Andrea Sattin, Monica Moroni, Serena Bovetti, Claudio Moretti, Francesca Succol, Angelo Forli, Dania Vecchia, Vijayakumar P. Rajamanickam, Andrea Bertoncini, Stefano Panzeri, Carlo Liberale, Tommaso Fellin
 2020, bioRxiv, doi: https://doi.org/10.1101/2020.05.14.095299
 
+Parameters for the simulations are set in main_simulate_TSeries_only.m 
+
 Details:
 - required software: Matlab R2019b
