@@ -125,6 +125,21 @@ params_fluo.sigma = 0.05;
 params_fluo.n = 1;
 params_fluo.k = 1;
 
+%% INITIALIZE PARAMS FOR 'MANUAL' SEGMENTATION
+segment_manual.method = 'manual';
+segment_manual.snr_thr = [5 10 15 20 25 30];%20; %keep only ROIs with SNR larger than this threshold
+segment_manual.snr_thr_LENS = [5 10 15 20 25 30];%20; %keep only ROIs with SNR larger than this threshold
+segment_manual.snr_thr_noLENS = [5 10 15 20 25 30];%20; %keep only ROIs with SNR larger than this threshold
+segment_manual.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
+segment_manual.overlap_thr = 0.8;%0.75; %merge ROIs whose overlapping area is larger than this percentage of total area of at least one roi
+ 
+segment_CaImAn.method = 'CaImAn';
+segment_CaImAn.code_path = '';%path to CaImAn intallation; TO BE ADDED BY USER
+segment_CaImAn.snr_thr_LENS = 1;%[0.25 0.5 1 1.5 2];%1; %keep only ROIs with SNR larger than this threshold
+segment_CaImAn.snr_thr_noLENS = 1;%[0.25 0.5 1 1.5 2];%1; %keep only ROIs with SNR larger than this threshold
+segment_CaImAn.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
+segment_CaImAn.overlap_thr = 0.8;%0.75; %merge ROIs whose overlapping area is larger than this percentage of total area of at least one roi
+
 %% GENERATE SIMULATED TSERIES
 for id_TS = 1:length(save_name_TSeries_list)
     disp(['simulation TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
@@ -158,6 +173,12 @@ for id_TS = 1:length(save_name_TSeries_list)
         noise_FOV_params,noise_rois_params,coeff_linear_mean_std_FOV,...
         coeff_linear_mean_std_rois,coeff_linear_mean_std_dark,GMModel,...
         path_PSF_noLENS, save_name_TSeries_list{id_TS}, save_path_TSeries_list{id_TS},0 );
+    
+    %%manual segmentation
+    findROIs_extractFluo_SNR(save_path_TSeries_list{id_TS},segment_manual.min_n_px, segment_manual.snr_thr_LENS, segment_manual.snr_thr_noLENS, segment_manual.overlap_thr);
+    %CaImAn segmentation
+    findROIs_extractFluo_CaImAn(save_path_TSeries_list{id_TS}, segment_CaImAn.code_path, segment_CaImAn.snr_thr_LENS, segment_CaImAn.snr_thr_noLENS, segment_CaImAn.overlap_thr, segment_CaImAn.min_n_px);
+
 
 end
 
