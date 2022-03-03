@@ -9,9 +9,9 @@ px_um_path = './pixel_size.mat';
 % save_path. Path to save data
 save_path_ROIs = './ROI_size.mat';
 
-% use experimental dataset to estimate roi size and density in FOV
-% data path. Path to example TSeries to estimate ROI size and density
-% data_path = './data/simulations_fit/';
+% %The following part of code was used to estimate the size and density of neurons in our experimental data 
+% %Use experimental dataset to estimate roi size and density in FOV
+% data_path = './data/simulations_fit/'; %Path to example TSeries to estimate ROI size and density
 % um_per_px = [2.139; 2.139];% um per pixels in X and Y axis for experimental data
 % main_estimate_rois_size_and_density_RULER(um_per_px, px_um_path, data_path, save_path_ROIs);
 % close all;
@@ -24,7 +24,9 @@ load(save_path_ROIs);
 % save_path. Path to save data
 save_path_noise = './pixels_noise.mat';
 
-%use experimental dataset to estimate dark noise, shot noise and so on
+% %The following part of code was used to estimate FOV noise in our experimental data 
+% %FOV noise is composed by dark noise and shot noise.
+% %Shot noise is different for background and ROI pixels.
 % main_estimate_px_noise(data_path, save_path_noise); 
 % close all;
 
@@ -57,39 +59,40 @@ x_um = 500; %width FOV in um (INTEGER)
 y_um = 500; %heigth FOV in um (INTEGER)
 z_um = 80; %depth sample in um (INTEGER)
 sample_size = [x_um y_um z_um];
-um_per_vx = 0.5;
+um_per_vx = 0.5; %um per sample voxel
 neuron_density = 83100/(10^9); %neurons/(um^3)
 nucleus_width = 4; %width nucleus in um
 nucleus_var = 2; %var width nucleus in um
 
 %% INITIALIZE PARAMS FOR IMAGING SIMULATION
 % set micron per pixel
-um_px_FOV = 2.5;
+um_px_FOV = 2.5; %FOV spatial resolution
 analyses_path = './';
 %intensity mask save path
 path_intensity_mask = fullfile(analyses_path,'intensity_mask');
-%path with magnification calibrations
+%path with magnification calibrations (obtained from experimental data)
 magn_factor_path_LENS = fullfile(analyses_path,'ruler_FOV','LENS_pixel_size.mat');
 magn_factor_path_noLENS = fullfile(analyses_path,'ruler_FOV','noLENS_pixel_size.mat');
-%path with PSF size estimate
+%path with PSF size estimate (obtained from experimental data)
 PSF_size_path_LENS = fullfile(analyses_path,'psf_estimate','eFOV_fit_pol.mat');
 PSF_size_path_noLENS = fullfile(analyses_path,'psf_estimate','aberr_fit_pol.mat');
 
 %% ESTIMATE OR IMPORT INTENSITY MASK AND PSF DISTRIBUTION
-%path to data for curvature and PSF estimate
-% data_path_films_LENS = '/media/DATA/mmoroni/endoscopes_project/data/fluorescent films per simulazione/500Lens/';
-% data_path_films_noLENS = '/media/DATA/mmoroni/endoscopes_project/data/fluorescent films per simulazione/500NoLens/';
-% intensity_profile_LENS = '/media/DATA/mmoroni/endoscopes_project/analyses/Endoscopes Intensity Profiles/profile_500_4.07_lens.txt';
-% intensity_profile_noLENS = '/media/DATA/mmoroni/endoscopes_project/analyses/Endoscopes Intensity Profiles/profile_500_4.07_Nolens.txt';
+% Intensity masks and FOV curvature are estimated from data
+% Path to data for curvature and PSF estimate (these data are available upon reasonable request)
+% data_path_films_LENS = '/endoscopes_project/data/fluorescent films per simulazione/500Lens/';
+% data_path_films_noLENS = '/endoscopes_project/data/fluorescent films per simulazione/500NoLens/';
+% intensity_profile_LENS = '/endoscopes_project/analyses/Endoscopes Intensity Profiles/profile_500_4.07_lens.txt';
+% intensity_profile_noLENS = '/endoscopes_project/analyses/Endoscopes Intensity Profiles/profile_500_4.07_Nolens.txt';
 
 path_intensity_mask_LENS = [path_intensity_mask '/profile_LENS_x'...
     num2str(x_um) '_y' num2str(y_um) '_z' num2str(z_um) '.mat'];
 path_intensity_mask_noLENS = [path_intensity_mask '/profile_LENS_x'...
     num2str(x_um) '_y' num2str(y_um) '_z' num2str(z_um) '.mat'];
-% 
-% if ~exist(path_intensity_mask_LENS) || ~exist(path_intensity_mask_noLENS)
-%     [path_intensity_mask_LENS, path_intensity_mask_noLENS] = intensity_convolution_mask(sample_size,um_per_vx,path_intensity_mask,data_path_films_LENS,data_path_films_noLENS);
-% end
+
+if ~exist(path_intensity_mask_LENS) || ~exist(path_intensity_mask_noLENS)
+    [path_intensity_mask_LENS, path_intensity_mask_noLENS] = intensity_convolution_mask(sample_size,um_per_vx,path_intensity_mask,data_path_films_LENS,data_path_films_noLENS);
+end
 
 %path to PSF mapping
 path_PSF_LENS = './imaging_ellipsoids/imaging_pixels_LENS.mat';
@@ -115,9 +118,9 @@ method_ca = 2; %1 = exponential decay (Deneux,2016) 2 = autoregressive model (Fr
 params_ca.p = 1;%1;%2;
 params_ca.gamma = [0.7];%[0.95];%[-0.712 1.7 ];%[0.1 0.8];
 %fluorescence simulation
-method_fluo = 3;
-params_fluo.b = 0;%90;%3;
-params_fluo.a = 1500;%150;%5;
+method_fluo = 3; %1 = linear (Friedrich, 2017), 2 = polynomial (Deneux,2016), 3 = supralinear and Hill saturation (Friedrich, 2017)
+params_fluo.b = 0;
+params_fluo.a = 1500; 
 params_fluo.sigma = 0.05;
 params_fluo.n = 1;
 params_fluo.k = 1;
@@ -125,7 +128,7 @@ params_fluo.k = 1;
 %% GENERATE SIMULATED TSERIES
 for id_TS = 1:length(save_name_TSeries_list)
     disp(['simulation TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
-    %%generate spatial sample
+    % generate spatial sample
     radius = mean(roi_radius) + randn(1,1)*std(roi_radius);%mean(mean_radius) + randn(1,1)*std(mean_radius);
     while radius<8
         radius = mean(roi_radius) + randn(1,1)*std(roi_radius);
@@ -134,7 +137,8 @@ for id_TS = 1:length(save_name_TSeries_list)
 
     [n_rois, neurons_id, sample_filename_temp] =...
         generate_spatial_sample(sample_size, um_per_vx, neuron_density, radius, var_within, nucleus_width, nucleus_var, sample_filename{id_TS});
-
+    
+    % simulate neural activity
     [time_spikes, S, time_imaging, ca, fluo] =...
         generate_neural_activity(dt_imaging, dt_spikes, T, spike_rate,...
         method_ca, params_ca,method_fluo,params_fluo,n_rois,...

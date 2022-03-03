@@ -6,12 +6,6 @@ x_um = sample_size(1); %width FOV in um (INTEGER)
 y_um = sample_size(2); %heigth FOV in um (INTEGER)
 z_um = sample_size(3); %depth sample in um (INTEGER)
 
-%% create sample in px
-% x_px = round(x_um/um_px);
-% y_px = round(y_um/um_px);
-% z_px = round(z_um/um_px);
-% [xx,yy,zz] = meshgrid(-x_px/2:1:x_px/2,-y_px:1:y_px/2,0:-1:-z_px);
-
 %% create sample in um
 [xx,yy,zz] = meshgrid(-x_um/2:um_per_vx:x_um/2,-y_um/2:um_per_vx:y_um/2,0:-um_per_vx:-z_um);
 
@@ -67,12 +61,6 @@ for i_x = 1:size(xx,1)
 end
 figure; imagesc(squeeze(mean(mask_intensity_noLENS,1))'); colormap(gray); axis image;
 
-% figure;
-% for i_z = size(xx,3):-1:1
-%     hold off;
-%     imagesc(mask_intensity_noLENS(:,:,i_z)); colormap(gray); caxis([0 max(mask_intensity_noLENS(:))])
-%     pause(0.05);
-% end
 savename_noLENS = [save_path 'profile_noLENS_x' num2str(x_um) '_y' num2str(y_um) '_z' num2str(z_um) '.mat'];
 save(savename_noLENS,...
     'curv_radius_noLENS', 'r_z_noLENS', 'z_depth_noLENS','mask_intensity_noLENS',...

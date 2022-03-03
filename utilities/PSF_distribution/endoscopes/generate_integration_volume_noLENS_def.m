@@ -31,7 +31,6 @@ FOV_r_correct = reshape(corrected_size(ic),size(FOV_r));
 xx_o = [-(size(FOV_r_correct,1)-1)/2 : 1 : (size(FOV_r_correct,1)-1)/2];
 yy_o = [-(size(FOV_r_correct,2)-1)/2 : 1 : (size(FOV_r_correct,2)-1)/2];
 [xx_o,yy_o] = meshgrid(xx_o,yy_o);
-% [yy_o,xx_o] = meshgrid(xx_o,yy_o);
 q1 = (xx_o>=0).*(yy_o>=0);
 q2 = (xx_o<0).*(yy_o>=0);
 q3 = (xx_o<0).*(yy_o<0);
@@ -73,8 +72,6 @@ teta_2 = zeros(size(xx_FOV_1d));
 phi = zeros(size(xx_FOV_1d));
 phi_2 = zeros(size(xx_FOV_1d));
 
-% for i_x = 1:size(xx_FOV,1)
-%     for i_y = 1:size(xx_FOV,2)
 for i_px = 1:length(xx_FOV_1d)
     
     disp(i_px);
@@ -98,35 +95,21 @@ for i_px = 1:length(xx_FOV_1d)
         select_vx = intersect(select_x,select_y);
         coor_0 = [xx(select_vx); yy(select_vx); zz(select_vx)];
 
-%         x_temp = sqrt((x0.^2+y0.^2)); %in um
         if x0>=0 && y0>=0
-%             phi(i_x,i_y) = acot(x0/y0);
              phi(i_px) = acot(x0/y0);
         elseif x0<0 && y0<0
-%             phi(i_x,i_y) = pi+acot(x0/y0);
             phi(i_px) = pi+acot(x0/y0);
         elseif x0>=0 && y0<0
-%             phi(i_x,i_y) = 2*pi+acot(x0/y0);
             phi(i_px) = 2*pi+acot(x0/y0);
         else
-%             phi(i_x,i_y) = pi+acot(x0/y0);
             phi(i_px) = pi+acot(x0/y0);
         end
         if x_px_temp == 0
-%             teta(i_x,i_y) = acot(Inf);% Inf;
-%             teta_2(i_x,i_y) = acot(Inf);
-%             z0(i_x,i_y) = xz_curve1(1)*um_px_Z; 
-%             z0_px(i_x,i_y) = round(z0(i_x,i_y)/um_px_Z);
             teta(i_px) = acot(Inf);% Inf;
             teta_2(i_px) = acot(Inf);
             z0(i_px) = xz_curve1(1)*um_px_Z; 
             z0_px(i_px) = round(z0(i_px)/um_px_Z);
-%             profile_temp(i_px,z0_px(i_px))=1;
-            
-%             z0_2(i_x,i_y) = xz_curve2(1)*um_px_Z; 
             z0_2(i_px) = xz_curve2(1)*um_px_Z; 
-%             z0_2_px(i_x,i_y) = round(z0_2(i_x,i_y)/um_px_Z); 
-%             profile_temp_2(i_x,i_y,z0_2_px(i_x,i_y))=1;
             
             rotation_mat = [cos(-teta(i_px)) 0 -sin(-teta(i_px)); 0 1 0; sin(-teta(i_px)) 0 cos(-teta(i_px))]*[cos(phi(i_px)) sin(phi(i_px)) 0; -sin(phi(i_px)) cos(phi(i_px)) 0; 0 0 1];
             coor_1 = coor_0 + [-x0; -y0; z0(i_px)];
@@ -146,37 +129,20 @@ for i_px = 1:length(xx_FOV_1d)
             
         elseif x_px_temp <= max(radius_profile)
             [~,ind_z_temp] = min(abs(x_temp-radius_profile));
-%             z0(i_x,i_y) = xz_curve1(ind_z_temp)*um_px_Z; %in um
-%             z0_px(i_x,i_y) = round(z0(i_x,i_y)/um_px_Z); 
             z0(i_px) = xz_curve1(ind_z_temp)*um_px_Z; %in um
             z0_px(i_px) = round(z0(i_px)/um_px_Z); 
-%             if z0(i_x,i_y)<z_min
-%                 teta(i_x,i_y) = pi-2*acos((z_min-z0(i_x,i_y))/x_temp);
-%             else
-%                 teta(i_x,i_y) = 0;
-%             end
             if z0(i_px)<z_min
                 teta(i_px) = pi-2*acos((z_min-z0(i_px))/x_temp);
             else
                 teta(i_px) = 0;
             end
-%             profile_temp(i_x,i_y,z0_px(i_x,i_y))=1;
-
-%             z0_2(i_x,i_y) = xz_curve2(ind_z_temp)*um_px_Z; %in um
-%             z0_2_px(i_x,i_y) = round(z0_2(i_x,i_y)/um_px_Z); 
             z0_2(i_px) = xz_curve2(ind_z_temp)*um_px_Z; %in um
             z0_2_px(i_px) = round(z0_2(i_px)/um_px_Z); 
-%             if z0(i_x,i_y)<z_min
-%                 teta_2(i_x,i_y) = pi-2*acos((z_min-z0_2(i_x,i_y))/x_temp);
-%             else
-%                 teta_2(i_x,i_y) = 0;
-%             end
-            if z0_2(i_px)<z_min
+           if z0_2(i_px)<z_min
                 teta_2(i_px) = pi-2*acos((z_min-z0_2(i_px))/x_temp);
             else
                 teta_2(i_px) = 0;
             end
-%             profile_temp_2(i_x,i_y,z0_2_px(i_x,i_y))=1;
             
            rotation_mat = [cos(-teta(i_px)) 0 -sin(-teta(i_px)); 0 1 0; sin(-teta(i_px)) 0 cos(-teta(i_px))]*[cos(phi(i_px)) sin(phi(i_px)) 0; -sin(phi(i_px)) cos(phi(i_px)) 0; 0 0 1];
             rotation_mat_2 = [cos(-teta_2(i_px)) 0 -sin(-teta_2(i_px)); 0 1 0; sin(-teta_2(i_px)) 0 cos(-teta_2(i_px))]*[cos(phi(i_px)) sin(phi(i_px)) 0; -sin(phi(i_px)) cos(phi(i_px)) 0; 0 0 1];
@@ -196,8 +162,6 @@ for i_px = 1:length(xx_FOV_1d)
             
             imaging_px(i_px,:) = px_def;
         end  
-%     end
-% end
 end
 
 imaging_px(:,sum(imaging_px,1)==0)=[];

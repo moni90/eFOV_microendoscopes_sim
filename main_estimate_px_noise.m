@@ -36,7 +36,7 @@ if run_flag == 1
     end
     cd(curr_dir);
     
-    % load processed data and estimate ROIs size
+    % load processed data and estimate noise
     mean_dark_noise0 = [];
     std_dark_noise0 = [];
     mean_px_noise0 = [];
@@ -172,21 +172,7 @@ if run_flag == 1
     xxx = x_limits(1):1:x_limits(end);
     hold on; plot(xxx,coeff_linear_mean_std_rois_0(1)*xxx+coeff_linear_mean_std_rois_0(2));
     
-%     save(savename,'noise_FOV_params','noise_rois_params','coeff_linear_mean_std_FOV',...
-%         'coeff_linear_mean_std_rois','coeff_linear_mean_std_dark','GMModel')
-    %
-%     clear remove_idx_1; clear remove_idx_2;
-%     clear mean_dark_noise0; clear mean_dark_noise;
-%     clear std_dark_noise0; clear std_dark_noise;
-%     clear x_limits; clear xxx;
-%     clear mean_px_noise0; clear mean_px_noise;
-%     clear std_px_noise0; clear std_px_noise;
-%     clear mean_rois_noise0;  clear mean_rois_noise;
-%     clear std_rois_noise0; clear std_rois_noise;
-%     clear remove_idx;
-%     clear curr_dir; clear data_dir; clear mat_list; clear tiff_list;
-%     clear coeff_linear_mean_std_rois_0; clear coeff_linear_mean_std_FOV_0;
+    save(savename,'noise_FOV_params','noise_rois_params','coeff_linear_mean_std_FOV',...
+        'coeff_linear_mean_std_rois','coeff_linear_mean_std_dark','GMModel')
     
 end
-%%
-clear choice; clear savename; clear run_flag;

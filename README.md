@@ -9,7 +9,7 @@ The accompanying paper is:
 
 Andrea Antonini, Andrea Sattin, Monica Moroni, Serena Bovetti, Claudio Moretti, Francesca Succol, Angelo Forli, Dania Vecchia, Vijayakumar P. Rajamanickam, Andrea Bertoncini, Stefano Panzeri, Carlo Liberale, Tommaso Fellin
 
-2020, bioRxiv, doi: https://doi.org/10.1101/2020.05.14.095299
+2020, eLife, doi: https://doi.org/10.7554/eLife.58882
 
 Before running the code for simulations, some auxiliary files must be downloaded from DOI: 10.17632/wm6c5wzs4c.1 (dataset_3, folders imaging_ellipsoids, intensity_mask, psf_estimate, ruler_FOV) and added to the main folder.
 

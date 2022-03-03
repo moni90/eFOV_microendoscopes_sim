@@ -11,30 +11,13 @@ x_um_array_FOV = -x_um/2:um_px_FOV:x_um/2;
 y_um_array_FOV = -y_um/2:um_px_FOV:y_um/2;
 
 load(intensity_mask_path);
-% if ispc
-%     load('..\..\analyses\PSF_simulations\intensity_mask\profile_LENS_x500_y500_z80.mat');
-% elseif isunix
-%     load('../../analyses/PSF_simulations/intensity_mask/profile_LENS_x500_y500_z80.mat');
-% end
 load(magn_factor_path);
 magn_factor = p_2; clear p_2;
-% if ispc
-%     load('..\..\analyses\ruler_FOV\LENS_pixel_size.mat');
-% elseif isunix
-%     load('../../analyses/ruler_FOV/LENS_pixel_size.mat');
-% end
 load(PSF_size_path);
-% if ispc
-%     coeff_path = '..\..\analyses\psf_estimate\eFOV_fit_pol.mat';
-% elseif isunix
-%     coeff_path = '../../analyses/psf_estimate/eFOV_fit_pol.mat';
-% end
-% load(coeff_path);
 
 x_um_array = -x_um/2:um_per_vx:x_um/2;
 y_um_array = -y_um/2:um_per_vx:y_um/2;
 z_um_array = 0:-um_per_vx:-z_um;
-
 
 % create mapping of each pixel to the voxels contained in its PSF
 imaging_px = generate_integration_volume_lens_def(x_um, y_um, z_um, um_px_FOV,...
