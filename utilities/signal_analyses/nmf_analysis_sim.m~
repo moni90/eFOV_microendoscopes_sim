@@ -1,5 +1,5 @@
 function [var_explained_LENS, var_explained_noLENS,...
-    n_rois_var_LENS, n_rois_var_noLENS] = nmf_analysis_sim(TSpath, nmf_code_path, segmentation_method,...
+    n_rois_var_LENS, n_rois_var_noLENS] = nmf_analysis_sim(TSpath, nmf_code_path, segmentation_method...
     use_df, mod_max, var_step, draw_figures)
 
 addpath(genpath(nmf_code_path));
@@ -24,21 +24,11 @@ load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
 cd(curr_dir);
 
 if use_df
-    if strcmp(segmentation_method,'manual')
-        act_LENS = C_Df_LENS_SNR;
-        act_noLENS = C_Df_noLENS_SNR;
-    elseif strcmp(segmentation_method,'CaImAn')
-        act_LENS = C_Df_CaImAn_LENS;
-        act_noLENS = C_Df_CaImAn_noLENS;      
-    end
+    act_LENS = C_Df_LENS;
+    act_noLENS = C_Df_noLENS;
 else
-    if strcmp(segmentation_method,'manual')
-        act_LENS = fluo_LENS_SNR_def;
-        act_noLENS = fluo_noLENS_SNR_def;
-    elseif strcmp(segmentation_method,'CaImAn')
-        act_LENS = fluo_CaImAn_LENS;
-        act_noLENS = fluo_CaImAn_noLENS;
-    end
+    act_LENS = fluo_LENS;
+    act_noLENS = fluo_noLENS;
 end
 
 FOV_proj_LENS = squeeze(nanmean(FOVframes_LENS,3));
