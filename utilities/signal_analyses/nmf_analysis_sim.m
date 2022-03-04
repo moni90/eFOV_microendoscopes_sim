@@ -19,7 +19,6 @@ curr_dir = pwd;
 cd(TSpath);
 ROI_groundtruth = dir('*groundtruth.mat');
 load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
-cd(curr_dir);
 
 if strcmp(segmentation.method,'manual')
     ROI_segmentation = dir('*_optimal_segmentation.mat');
@@ -47,6 +46,7 @@ elseif strcmp(segmentation.method,'CaImAn')
         act_noLENS = fluo_CaImAn_noLENS;
     end
 end
+cd(curr_dir);
 
 FOV_proj_LENS = squeeze(nanmean(FOVframes_LENS,3));
 nROIs_LENS = size(act_LENS,1);
