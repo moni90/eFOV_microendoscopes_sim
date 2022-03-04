@@ -47,7 +47,7 @@ min_n_px=5;
 if ispc
     ts_name = split(ground_truth_list.folder,'\');
     ts_name = ts_name{end-1};
-    save_name = [ground_truth_list.folder '\' ts_name '_SNR' num2str(thr_snr_LENS*100) '_CaImAn_segmentation.mat'];
+    save_name = [ground_truth_list.folder '\' ts_name '_SNR' num2str(thr_snr_LENS) '_CaImAn_segmentation.mat'];
 elseif isunix
     ts_name = split(ground_truth_list.folder,'/');
     ts_name = ts_name{end-1};
@@ -62,7 +62,7 @@ for i_ROI = 1:size(A_CaImAn_LENS,2)
     mapROIs = reshape(sum(A_CaImAn_LENS(:,i_ROI)>0,2),x_FOV_LENS,y_FOV_LENS);
     hold on; contour(mapROIs,'y');
 end
-saveas(gcf,fullfile(ground_truth_list.folder, [ts_name '_FOV_ROIs_CaImAn_LENS.fig']));
+saveas(gcf,[ground_truth_list.folder '/' ground_truth_list.folder(end-6:end) '_FOV_ROIs_CaImAn_LENS.fig']);
 
 figure;
 imagesc(nanmean(reshape(FOVframes_noLENS_1d,x_FOV_noLENS,y_FOV_noLENS,[]),3)); colormap('gray');
@@ -70,4 +70,4 @@ for i_ROI = 1:size(A_CaImAn_noLENS,2)
     mapROIs = reshape(sum(A_CaImAn_noLENS(:,i_ROI)>0,2),x_FOV_noLENS,y_FOV_noLENS);
     hold on; contour(mapROIs,'y');
 end
-saveas(gcf,fullfile(ground_truth_list.folder, [ts_name '_SNR' num2str(thr_snr_LENS*100) '_FOV_ROIs_CaImAn_noLENS.fig']));
+saveas(gcf,[ground_truth_list.folder '/' ground_truth_list.folder(end-10:end) '_SNR' num2str(thr_snr_LENS*100) '_FOV_ROIs_CaImAn_noLENS.fig']);

@@ -97,13 +97,17 @@ end
 
 
 if ispc
-    save([ground_truth_list.folder '\' ground_truth_list.folder(end-6:end) '_optimal_segmentation.mat'],...
+    ts_name = split(ground_truth_list.folder,'\');
+    ts_name = ts_name{end-1};
+    save([ground_truth_list.folder '\' ts_name '_optimal_segmentation.mat'],...
         'Amerge_LENS','merged_ROIs_0_LENS','Amerge_noLENS','merged_ROIs_0_noLENS',...
         'merged_ROIs_LENS','A_SNR_LENS_def','fluo_LENS_SNR_def','C_Df_LENS_SNR','corr_gt_SNR_LENS_1','corr_gt_SNR_LENS_2','corr_gt_SNR_LENS_3','corr_gt_SNR_LENS_sum',...
         'merged_ROIs_noLENS','A_SNR_noLENS_def','fluo_noLENS_SNR_def','C_Df_noLENS_SNR','corr_gt_SNR_noLENS_1','corr_gt_SNR_noLENS_2','corr_gt_SNR_noLENS_3','corr_gt_SNR_noLENS_sum',...
         'Recall_LENS', 'Precision_LENS', 'F1_LENS','Recall_noLENS', 'Precision_noLENS', 'F1_noLENS');
 elseif isunix
-    save([ground_truth_list.folder '/' ground_truth_list.folder(end-6:end) '_optimal_segmentation.mat'],...
+    ts_name = split(ground_truth_list.folder,'/');
+    ts_name = ts_name{end-1};
+    save([ground_truth_list.folder '/' ts_name '_optimal_segmentation.mat'],...
         'Amerge_LENS','merged_ROIs_0_LENS','Amerge_noLENS','merged_ROIs_0_noLENS',...
         'merged_ROIs_LENS','A_SNR_LENS_def','fluo_LENS_SNR_def','C_Df_LENS_SNR','corr_gt_SNR_LENS_1','corr_gt_SNR_LENS_2','corr_gt_SNR_LENS_3','corr_gt_SNR_LENS_sum',...
         'merged_ROIs_noLENS','A_SNR_noLENS_def','fluo_noLENS_SNR_def','C_Df_noLENS_SNR','corr_gt_SNR_noLENS_1','corr_gt_SNR_noLENS_2','corr_gt_SNR_noLENS_3','corr_gt_SNR_noLENS_sum',...
@@ -116,7 +120,7 @@ for i_ROI = 1:size(A_SNR_LENS_def,2)
     mapROIs = reshape(sum(A_SNR_LENS_def(:,i_ROI)>0,2),x_FOV_LENS,y_FOV_LENS);
     hold on; contour(mapROIs,'y');
 end
-saveas(gcf,[ground_truth_list.folder '/' ground_truth_list.folder(end-6:end) '_FOV_ROIs_LENS.fig']);
+saveas(gcf,fullfile(ground_truth_list.folder, [ts_name '_FOV_ROIs_LENS.fig']));
 
 figure;
 imagesc(nanmean(reshape(FOVframes_noLENS_1d,x_FOV_noLENS,y_FOV_noLENS,[]),3)); colormap('gray');
@@ -124,4 +128,4 @@ for i_ROI = 1:size(A_SNR_noLENS_def,2)
     mapROIs = reshape(sum(A_SNR_noLENS_def(:,i_ROI)>0,2),x_FOV_noLENS,y_FOV_noLENS);
     hold on; contour(mapROIs,'y');
 end
-saveas(gcf,[ground_truth_list.folder '/' ground_truth_list.folder(end-6:end) '_FOV_ROIs_noLENS.fig']);
+saveas(gcf,fullfile(ground_truth_list.folder, [ts_name '_FOV_ROIs_noLENS.fig']));
