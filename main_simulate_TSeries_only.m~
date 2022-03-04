@@ -196,7 +196,7 @@ end
 
 %% PERFORM NMF
 nmf_code_path = '';%path to PopulationSpikeTrainFactorization; TO BE ADDED BY USER
-use_df = 0; % 0: perform nmf on deconvolved activity; 1: perform nmf on nomalized fluorescence
+use_df = 0; % 0: perform nmf on deconvolved activity; 1: perform nmf on normalized fluorescence
 mod_max = 300; %maximum NMF to consider (if nROIs<mod_max, then mod_max = nROI)
 var_step = 10:10:100; %variance steps
 draw_figures = 0;
@@ -213,24 +213,12 @@ for id_TS = 1:length(save_name_TSeries_list)
 end
 
 %% COMPUTE PAIRWISE CORRELATIONS AS A FUNCTION OF DISTANCE FROM CENTER
-id_SNR = 3;
-use_df = 1;
-max_dist = 20;
-max_dist_l = 60;
-SNR_LENS = [];
-SNR_noLENS = [];
-dist_LENS = [];
-corr_LENS = [];
-dist_LENS_l = [];
-corr_LENS_l = [];
-dist_noLENS = [];
-corr_noLENS = [];
-dist_noLENS_l = [];
-corr_noLENS_l = [];
-
+use_df = 1; % 0: deconvolved activity; 1: normalized fluorescence
+max_dist = 20; % max distance to consider two ROIs as near
+max_dist_l = 60; % min distance to consider two ROIs as far
 
 for id_TS = 1:length(save_name_TSeries_list)
-    disp(['NMF. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
+    disp(['PAIRWISE CORR. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
     
     %%groundtruth
     [SNR_groundtruth, dist_groundtruth, corr_groundtruth, dist_groundtruth_l, ...
