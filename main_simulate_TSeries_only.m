@@ -196,7 +196,7 @@ end
 
 %% PERFORM NMF
 nmf_code_path = '';%path to PopulationSpikeTrainFactorization; TO BE ADDED BY USER
-use_df = 0; % 0: perform nmf on deconvolved activity; 1: perform nmf on nomalized fluorescence
+use_df = 0; % 0: perform nmf on deconvolved activity; 1: perform nmf on normalized fluorescence
 mod_max = 300; %maximum NMF to consider (if nROIs<mod_max, then mod_max = nROI)
 var_step = 10:10:100; %variance steps
 draw_figures = 0;
@@ -205,10 +205,34 @@ for id_TS = 1:length(save_name_TSeries_list)
     disp(['NMF. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
     
     %%manual segmentation
-    [var_explained_SNR_LENS, var_explained_SNR_noLENS,n_rois_var_SNR_LENS, n_rois_var_SNR_noLENS] = ...
+    [var_explained_manual_LENS, var_explained_manual_noLENS,n_rois_var_manual_LENS, n_rois_var_manual_noLENS] = ...
         nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segment_manual, use_df, mod_max, var_step, draw_figures);
     %%CaImAn segmentation
     [var_explained_CaImAn_LENS, var_explained_CaImAn_noLENS,n_rois_var_CaImAn_LENS, n_rois_var_CaImAn_noLENS] = ...
         nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segment_CaImAn, use_df, mod_max, var_step, draw_figures);
+end
 
+%% COMPUTE PAIRWISE CORRELATIONS AS A FUNCTION OF DISTANCE FROM CENTER
+use_df = 1; % 0: deconvolved activity; 1: normalized fluorescence
+max_dist = 20; % max distance to consider two ROIs as near
+max_dist_l = 60; % min distance to consider two ROIs as far
+
+for id_TS = 1:length(save_name_TSeries_list)
+    disp(['NMF. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
+    
+    %%groundtruth
+    [SNR_groundtruth, dist_groundtruth, corr_groundtruth, dist_groundtruth_l, ...
+        corr_groundtruth_l] = ...
+        compute_SNR_pairwise_corr_groundtruth(TSpath, um_px_FOV,...
+        use_df, max_dist, max_dist_l, magn_factor_path_LENS, magn_factor_path_noLENS);
+    %%manual segmentation
+    [SNR_manual_LENS, SNR_manual_noLENS, dist_manual_LENS, corr_manual_LENS, dist_manual_LENS_l, ...
+        corr_manual_LENS_l, dist_manual_noLENS, corr_manual_noLENS, dist_manual_noLENS_l, corr_manual_noLENS_l] = ...
+        compute_SNR_pairwise_corr_ROIs(save_path_TSeries_list{id_TS}, segment_manual, um_px_FOV,...
+        use_df, max_dist, max_dist_l, magn_factor_path_LENS, magn_factor_path_noLENS);
+    %%CaImAn segmentation
+    [SNR_CaImAn_LENS, SNR_CaImAn_noLENS, dist_CaImAn_LENS, corr_CaImAn_LENS, dist_CaImAn_LENS_l, ...
+        corr_CaImAn_LENS_l, dist_CaImAn_noLENS, corr_CaImAn_noLENS, dist_CaImAn_noLENS_l, corr_CaImAn_noLENS_l] = ...
+        compute_SNR_pairwise_corr_ROIs(save_path_TSeries_list{id_TS}, segment_CaImAn, um_px_FOV,...
+        use_df, max_dist, max_dist_l, magn_factor_path_LENS, magn_factor_path_noLENS);
 end

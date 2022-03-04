@@ -1,7 +1,6 @@
 function [dist_rois, pairwise_corr] = pairwise_correlations_radius(A, fluo, C_Df, x_FOV, y_FOV, um_px_FOV_x, um_px_FOV_y, use_df, max_dist, magnification_factor_path)
 % correct for varying maginfication in the FOV and compute, for each ROI
-% pair CLOSE in space (distance between ROIs smaller than max_dist), its
-% pairwise correlation and its distance from the FOV center
+% pair CLOS, its pairwise correlation and its distance from the FOV center
 
 n_ROIs = size(A,2);
 rois_coord = correct_pixel_size(A, x_FOV, y_FOV, um_px_FOV_x, um_px_FOV_y, magnification_factor_path);

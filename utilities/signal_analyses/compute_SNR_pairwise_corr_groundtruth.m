@@ -1,20 +1,15 @@
 function [SNR_groundtruth, dist_groundtruth, corr_groundtruth, dist_groundtruth_l, ...
     corr_groundtruth_l] = ...
-    compute_SNR_pairwise_corr_groundtruth(groundtruth_path, um_px_FOV,...
+    compute_SNR_pairwise_corr_groundtruth(TSpath, um_px_FOV,...
     use_df, max_dist, max_dist_l, magn_factor_path_LENS, magn_factor_path_noLENS)
 
 curr_dir = pwd;
 %folder with groundtruth
-cd(groundtruth_path);
-if ispc
-    ground_truth_list = dir('**\*groundtruth.mat');
-elseif isunix
-    ground_truth_list = dir('**/*groundtruth.mat');
-end
+cd(TSpath);
+ROI_groundtruth = dir('*groundtruth.mat');
 cd(curr_dir);
-load(fullfile(ground_truth_list.folder,ground_truth_list.name), 'FOVframes_LENS', 'A_LENS', 'ca', 'fluo');
+load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name), 'FOVframes_LENS', 'A_LENS', 'ca', 'fluo');
 [x_FOV_LENS,y_FOV_LENS, ~] = size(FOVframes_LENS);
-% [x_FOV_noLENS,y_FOV_noLENS,~] = size(FOVframes_noLENS);
 clear FOVframes_LENS;
 
 %compute signals SNR

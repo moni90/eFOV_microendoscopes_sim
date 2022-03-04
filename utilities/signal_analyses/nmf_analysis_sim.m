@@ -5,17 +5,6 @@ function [var_explained_LENS, var_explained_noLENS,...
 addpath(genpath(nmf_code_path));
 curr_dir = pwd;
 
-% % use_df = 0;
-% tot_nROIs_LENS= zeros(1,length(list));
-% tot_nROIs_noLENS = zeros(1,length(list));
-% % mod_max = 300;
-% num_modules = 1:1:mod_max;
-% var_explained_LENS = 100*ones(length(list),length(num_modules));
-% var_explained_noLENS = 100*ones(length(list),length(num_modules));
-% % var_step = 10:10:100;
-% n_rois_var_LENS = NaN*ones(length(list),length(var_step));
-% n_rois_var_noLENS = NaN*ones(length(list),length(var_step));
-
 cd(TSpath);
 ROI_groundtruth = dir('*groundtruth.mat');
 load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
