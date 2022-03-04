@@ -125,20 +125,6 @@ params_fluo.sigma = 0.05;
 params_fluo.n = 1;
 params_fluo.k = 1;
 
-%% INITIALIZE PARAMS FOR 'MANUAL' SEGMENTATION
-segment_manual.method = 'manual';
-segment_manual.code_path = '';%path to CaImAn intallation; TO BE ADDED BY USER
-segment_manual.snr_thr = 20;%[5 10 15 20 25 30]; %keep only ROIs with SNR larger than this threshold
-segment_manual.snr_thr_LENS = 20;%[5 10 15 20 25 30];; %keep only ROIs with SNR larger than this threshold
-segment_manual.snr_thr_noLENS = 20;%[5 10 15 20 25 30]; %keep only ROIs with SNR larger than this threshold
-segment_manual.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
-segment_manual.overlap_thr = 0.8;%0.75; %merge ROIs whose overlapping area is larger than this percentage of total area of at least one roi
- 
-segment_CaImAn.method = 'CaImAn';
-segment_CaImAn.code_path = '';%path to CaImAn intallation; TO BE ADDED BY USER
-segment_CaImAn.snr_thr_LENS = 1;%[0.25 0.5 1 1.5 2]; %keep only ROIs with SNR larger than this threshold
-segment_CaImAn.snr_thr_noLENS = 1;%[0.25 0.5 1 1.5 2]; %keep only ROIs with SNR larger than this threshold
-segment_CaImAn.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
 segment_CaImAn.overlap_thr = 0.8;%0.75; %merge ROIs whose overlapping area is larger than this percentage of total area of at least one roi
 
 %% GENERATE SIMULATED TSERIES
@@ -183,3 +169,41 @@ for id_TS = 1:length(save_name_TSeries_list)
 
 end
 
+%% INITIALIZE PARAMS FOR 'MANUAL' AND CAIMAN SEGMENTATION
+segment_manual.method = 'manual';
+segment_manual.code_path = '';%path to CaImAn installation; TO BE ADDED BY USER
+segment_manual.snr_thr = 20;%[5 10 15 20 25 30]; %keep only ROIs with SNR larger than this threshold
+segment_manual.snr_thr_LENS = 20;%[5 10 15 20 25 30];; %keep only ROIs with SNR larger than this threshold
+segment_manual.snr_thr_noLENS = 20;%[5 10 15 20 25 30]; %keep only ROIs with SNR larger than this threshold
+segment_manual.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
+segment_manual.overlap_thr = 0.8;%0.75; %merge ROIs whose overlapping area is larger than this percentage of total area of at least one roi
+ 
+segment_CaImAn.method = 'CaImAn';
+segment_CaImAn.code_path = '';%path to CaImAn installation; TO BE ADDED BY USER
+segment_CaImAn.snr_thr_LENS = 1;%[0.25 0.5 1 1.5 2]; %keep only ROIs with SNR larger than this threshold
+segment_CaImAn.snr_thr_noLENS = 1;%[0.25 0.5 1 1.5 2]; %keep only ROIs with SNR larger than this threshold
+segment_CaImAn.min_n_px = 8; %keep only ROIs with num_pixels larger than this threshold
+
+%% SEGMENT SIMULATED TSERIES
+for id_TS = 1:length(save_name_TSeries_list)
+    disp(['SEGMENTATION. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
+
+    %%manual segmentation
+    findROIs_extractFluo_SNR(save_path_TSeries_list{id_TS},segment_manual.code_path,segment_manual.min_n_px, segment_manual.snr_thr_LENS, segment_manual.snr_thr_noLENS, segment_manual.overlap_thr);
+    %CaImAn segmentation
+    findROIs_extractFluo_CaImAn(save_path_TSeries_list{id_TS}, segment_CaImAn.code_path, segment_CaImAn.snr_thr_LENS, segment_CaImAn.snr_thr_noLENS, segment_CaImAn.overlap_thr, segment_CaImAn.min_n_px);
+end
+
+%% PERFORM NMF
+nmf_code_path = '';%path to PopulationSpikeTrainFactorization; TO BE ADDED BY USER
+use_df = 0; % 0: perform nmf on deconvolved activity; 1: perform nmf on nomalized fluorescence
+mod_max = 300; %maximum NMF to consider (if nROIs<mod_max, then mod_max = nROI)
+var_step = 10:10:100; %variance steps
+draw_figures = 0;
+
+for id_TS = 1:length(save_name_TSeries_list)
+    disp(['NMF. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
+
+    [var_explained_LENS, var_explained_noLENS,n_rois_var_LENS, n_rois_var_noLENS] = ...
+        nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, use_df, mod_max, var_step, draw_figures);
+end
