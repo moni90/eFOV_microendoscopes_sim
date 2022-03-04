@@ -1,5 +1,5 @@
 function [delta_ROI1_LENS, delta_ROI2_LENS, delta_ROI3_LENS, delta_ROI1_noLENS, delta_ROI2_noLENS, delta_ROI3_noLENS,n_ROIs_SNR_LENS_def,n_ROIs_SNR_noLENS_def,...
-    Recall_LENS, Precision_LENS, F1_LENS,Recall_noLENS, Precision_noLENS, F1_noLENS] = findROIs_extractFluo_SNR(analyses_dir, min_n_px, thr_snr_LENS, thr_snr_noLENS, thr_overlap)
+    Recall_LENS, Precision_LENS, F1_LENS,Recall_noLENS, Precision_noLENS, F1_noLENS] = findROIs_extractFluo_SNR(analyses_dir, caiman_path, min_n_px, thr_snr_LENS, thr_snr_noLENS, thr_overlap)
 %simulate manual segmentation of synthetic data with and without eFOV lens
 %compute segmentation quality
 
@@ -36,8 +36,8 @@ clear FOVframes_LENS; clear FOVframes_noLENS;
 [A_SNR_LENS_def, fluo_LENS_SNR_def, merged_ROIs_LENS, delta_ROI3_LENS] = filter_SNR(Amerge_LENS, merged_ROIs_0_LENS, fluo_merged_LENS, thr_snr_LENS);
 [A_SNR_noLENS_def, fluo_noLENS_SNR_def, merged_ROIs_noLENS, delta_ROI3_noLENS] = filter_SNR(Amerge_noLENS, merged_ROIs_0_noLENS, fluo_merged_noLENS, thr_snr_noLENS);
 
-[C_LENS_SNR_def,C_Df_LENS_SNR] = deconvolve_activity(A_SNR_LENS_def, fluo_LENS_SNR_def, FOVframes_LENS_1d);
-[C_noLENS_SNR_def,C_Df_noLENS_SNR] = deconvolve_activity(A_SNR_noLENS_def, fluo_noLENS_SNR_def, FOVframes_noLENS_1d);
+[C_LENS_SNR_def,C_Df_LENS_SNR] = deconvolve_activity(caiman_path, A_SNR_LENS_def, fluo_LENS_SNR_def, FOVframes_LENS_1d);
+[C_noLENS_SNR_def,C_Df_noLENS_SNR] = deconvolve_activity(caiman_path, A_SNR_noLENS_def, fluo_noLENS_SNR_def, FOVframes_noLENS_1d);
 
 [Recall_LENS, Precision_LENS, F1_LENS] = evaluate_segmentation_quality(Acut_LENS, A_SNR_LENS_def);
 [Recall_noLENS, Precision_noLENS, F1_noLENS] = evaluate_segmentation_quality(Acut_noLENS, A_SNR_noLENS_def);

@@ -1,6 +1,6 @@
-function [C,C_Df] = deconvolve_activity(A, fluo, FOVframes_1d)
+function [C,C_Df] = deconvolve_activity(caiman_path, A, fluo, FOVframes_1d)
 
-addpath(genpath('/home/calcium/Monica/endoscopes_project/code/simulations_PSF_fit/Matlab code_jb_copy/ETIC/'));
+addpath(genpath(caiman_path));
 
 C = zeros(size(fluo));
 for i = 1:size(A,2)
