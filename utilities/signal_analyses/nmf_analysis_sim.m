@@ -47,7 +47,7 @@ end
 
 FOV_proj_LENS = squeeze(nanmean(FOVframes_LENS,3));
 nROIs_LENS = size(act_LENS,1);
-[exp_var_LENS,n_modules_LENS] = run_nmf(act_LENS, Agood_LENS, nROIs_LENS, FOV_proj_LENS, draw_figures);
+[exp_var_LENS,n_modules_LENS] = run_nmf(act_LENS, Agood_LENS, nROIs_LENS, FOV_proj_LENS, mod_max, draw_figures);
 var_explained_LENS = mean(exp_var_LENS,1);
 
 FOV_proj_noLENS = squeeze(nanmean(FOVframes_noLENS,3));
