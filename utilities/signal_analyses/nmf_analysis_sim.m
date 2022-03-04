@@ -17,10 +17,10 @@ curr_dir = pwd;
 % n_rois_var_noLENS = NaN*ones(length(list),length(var_step));
 
 cd(TSpath);
-ROI_opt = dir('**\*_optimal_segmentation.mat');
-ROI_groundtruth = dir('**\*groundtruth.mat');
-load(ROI_opt);
-load(ROI_groundtruth);
+ROI_opt = dir('*_optimal_segmentation.mat');
+ROI_groundtruth = dir('*groundtruth.mat');
+load(fullfile(ROI_opt.folder, ROI_opt.name));
+load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
 cd(curr_dir);
 
 if use_df
