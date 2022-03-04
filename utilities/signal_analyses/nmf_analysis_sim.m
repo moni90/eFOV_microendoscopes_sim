@@ -23,32 +23,36 @@ load(fullfile(ROI_opt.folder, ROI_opt.name));
 load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
 cd(curr_dir);
 
-if use_df
-    if strcmp(segmentation_method,'manual')
+if strcmp(segmentation_method,'manual')
+    Agood_LENS = A_SNR_LENS_def;
+    Agood_noLENS = A_SNR_noLENS_def;
+    if use_df
         act_LENS = C_Df_LENS_SNR;
         act_noLENS = C_Df_noLENS_SNR;
-    elseif strcmp(segmentation_method,'CaImAn')
-        act_LENS = C_Df_CaImAn_LENS;
-        act_noLENS = C_Df_CaImAn_noLENS;      
-    end
-else
-    if strcmp(segmentation_method,'manual')
+    else
         act_LENS = fluo_LENS_SNR_def;
         act_noLENS = fluo_noLENS_SNR_def;
-    elseif strcmp(segmentation_method,'CaImAn')
+    end
+elseif strcmp(segmentation_method,'CaImAn')
+    Agood_LENS = full(A_CaImAn_LENS);
+    Agood_noLENS = full(A_CaImAn_noLENS);
+    if use_df
+        act_LENS = C_Df_CaImAn_LENS;
+        act_noLENS = C_Df_CaImAn_noLENS;      
+    else
         act_LENS = fluo_CaImAn_LENS;
         act_noLENS = fluo_CaImAn_noLENS;
     end
 end
 
 FOV_proj_LENS = squeeze(nanmean(FOVframes_LENS,3));
-nROIs_LENS = size(C_Df_LENS,1);
-[exp_var_LENS,n_modules_LENS] = run_nmf(C_Df_LENS, Agood_LENS, nROIs_LENS, FOV_proj_LENS, draw_figures);
+nROIs_LENS = size(act_LENS,1);
+[exp_var_LENS,n_modules_LENS] = run_nmf(act_LENS, Agood_LENS, nROIs_LENS, FOV_proj_LENS, draw_figures);
 var_explained_LENS = mean(exp_var_LENS,1);
 
 FOV_proj_noLENS = squeeze(nanmean(FOVframes_noLENS,3));
-nROIs_noLENS = size(C_Df_noLENS,1);
-[exp_var_noLENS,n_modules_noLENS] = run_nmf(C_Df_noLENS, Agood_noLENS, nROIs_noLENS, FOV_proj_noLENS, mod_max, draw_figures);
+nROIs_noLENS = size(act_noLENS,1);
+[exp_var_noLENS,n_modules_noLENS] = run_nmf(act_noLENS, Agood_noLENS, nROIs_noLENS, FOV_proj_noLENS, mod_max, draw_figures);
 var_explained_noLENS = mean(exp_var_noLENS,1);
 
 n_rois_var_LENS = zeros(length(var_step),1);
