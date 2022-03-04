@@ -1,5 +1,5 @@
 function [var_explained_LENS, var_explained_noLENS,...
-    n_rois_var_LENS, n_rois_var_noLENS] = nmf_analysis_sim(TSpath, nmf_code_path, segmentation_method,...
+    n_rois_var_LENS, n_rois_var_noLENS] = nmf_analysis_sim(TSpath, nmf_code_path, segmentation,...
     use_df, mod_max, var_step, draw_figures)
 
 addpath(genpath(nmf_code_path));
@@ -17,13 +17,13 @@ curr_dir = pwd;
 % n_rois_var_noLENS = NaN*ones(length(list),length(var_step));
 
 cd(TSpath);
-ROI_opt = dir('*_optimal_segmentation.mat');
 ROI_groundtruth = dir('*groundtruth.mat');
-load(fullfile(ROI_opt.folder, ROI_opt.name));
 load(fullfile(ROI_groundtruth.folder,ROI_groundtruth.name));
 cd(curr_dir);
 
-if strcmp(segmentation_method,'manual')
+if strcmp(segmentation.method,'manual')
+    ROI_segmentation = dir('*_optimal_segmentation.mat');
+    load(fullfile(ROI_segmentation.folder, ROI_segmentation.name));
     Agood_LENS = A_SNR_LENS_def;
     Agood_noLENS = A_SNR_noLENS_def;
     if use_df
@@ -33,7 +33,10 @@ if strcmp(segmentation_method,'manual')
         act_LENS = fluo_LENS_SNR_def;
         act_noLENS = fluo_noLENS_SNR_def;
     end
-elseif strcmp(segmentation_method,'CaImAn')
+elseif strcmp(segmentation.method,'CaImAn')
+    segmentation_name = ['*_SNR' num2str(segmentation.snr_thr_LENS*100) '_CaImAn_segmentation.mat'];
+    ROI_segmentation = dir(segmentation_name);
+    load(fullfile(ROI_segmentation.folder, ROI_segmentation.name));
     Agood_LENS = full(A_CaImAn_LENS);
     Agood_noLENS = full(A_CaImAn_noLENS);
     if use_df

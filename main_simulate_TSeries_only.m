@@ -205,12 +205,10 @@ for id_TS = 1:length(save_name_TSeries_list)
     disp(['NMF. TS ', num2str(id_TS) ' of ' num2str(length(save_name_TSeries_list))]);
     
     %%manual segmentation
-    segmentation_method = 'manual';
     [var_explained_SNR_LENS, var_explained_SNR_noLENS,n_rois_var_SNR_LENS, n_rois_var_SNR_noLENS] = ...
-        nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segmentation_method, use_df, mod_max, var_step, draw_figures);
+        nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segment_manual, use_df, mod_max, var_step, draw_figures);
     %%CaImAn segmentation
-    segmentation_method = 'CaImAn';
     [var_explained_CaImAn_LENS, var_explained_CaImAn_noLENS,n_rois_var_CaImAn_LENS, n_rois_var_CaImAn_noLENS] = ...
-        nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segmentation_method, use_df, mod_max, var_step, draw_figures);
+        nmf_analysis_sim(save_path_TSeries_list{id_TS}, nmf_code_path, segment_CaImAn, use_df, mod_max, var_step, draw_figures);
 
 end
