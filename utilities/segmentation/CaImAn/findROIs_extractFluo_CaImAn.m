@@ -46,11 +46,11 @@ min_n_px=5;
 
 if ispc
     ts_name = split(ground_truth_list.folder,'\');
-    ts_name = ts_name{end-1};
+    ts_name = ts_name{end};
     save_name = [ground_truth_list.folder '\' ts_name '_SNR' num2str(thr_snr_LENS*100) '_CaImAn_segmentation.mat'];
 elseif isunix
     ts_name = split(ground_truth_list.folder,'/');
-    ts_name = ts_name{end-1};
+    ts_name = ts_name{end};
     save_name = [ground_truth_list.folder '/' ts_name '_SNR' num2str(thr_snr_LENS*100) '_CaImAn_segmentation.mat'];
 end
 save(save_name, 'A_CaImAn_LENS','A_CaImAn_noLENS','C_Df_CaImAn_LENS','C_Df_CaImAn_noLENS','fluo_CaImAn_LENS','fluo_CaImAn_noLENS',...
