@@ -11,9 +11,12 @@ Andrea Antonini, Andrea Sattin, Monica Moroni, Serena Bovetti, Claudio Moretti, 
 
 2020, eLife, doi: https://doi.org/10.7554/eLife.58882
 
-Before running the code for simulations, some auxiliary files must be downloaded from DOI: 10.17632/wm6c5wzs4c.2 (dataset_3, folders imaging_ellipsoids, intensity_mask, psf_estimate, ruler_FOV) and added to the main folder.
+Before running the code for simulations, some auxiliary files must be downloaded from DOI: 10.17632/wm6c5wzs4c.3 (dataset_3, folders imaging_ellipsoids, intensity_mask, psf_estimate, ruler_FOV) and added to the main folder.
 
 Parameters for the simulations are set in main_simulate_TSeries_only.m 
 
 Details:
 - required software: Matlab R2019b
+- CaImAn for Matlab
+- Non-negative Matrix factorzation toobox (https://stommac.eu/index.php/code)
+- Information theory toolbox (https://doi.org/10.1186/1471-2202-10-81)
